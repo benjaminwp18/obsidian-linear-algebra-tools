@@ -1,4 +1,5 @@
 import { Plugin } from 'obsidian';
+import Matrix from './matrix';
 
 export default class MyPlugin extends Plugin {
 	async onload() {
@@ -6,7 +7,9 @@ export default class MyPlugin extends Plugin {
 			let arr: number[][] = source.split('\n')
 				.map(row => row.split(' ').map(entry => Number(entry)));
 
-			el.innerHTML = arr.map(row => row.join(',')).join(';');
+			let matrix: Matrix = new Matrix(arr);
+			matrix.rref();
+			el.innerHTML = matrix.toString();
 		});
 	}
 }
