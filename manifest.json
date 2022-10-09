@@ -1,0 +1,9 @@
+{
+	"id": "linear-algebra-tools",
+	"name": "Linear Algebra Tools",
+	"version": "0.0.1",
+	"minAppVersion": "0.15.0",
+	"description": "Tools to make linear algebra problems easier",
+	"author": "Benjamin Poulin",
+	"isDesktopOnly": false
+}
