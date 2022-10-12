@@ -1,4 +1,4 @@
-import { Plugin } from 'obsidian';
+import { Plugin, renderMath, finishRenderMath } from 'obsidian';
 import Matrix from './matrix';
 
 export default class MyPlugin extends Plugin {
@@ -8,8 +8,14 @@ export default class MyPlugin extends Plugin {
 				.map(row => row.split(' ').map(entry => Number(entry)));
 
 			let matrix: Matrix = new Matrix(arr);
-			matrix.rref();
-			el.innerHTML = matrix.toString();
+			let steps: string[] = matrix.rref();
+
+			el.innerHTML = '';
+			steps.forEach(step => {
+				if (step == 'br') el.appendChild(document.createElement('br'));
+				else el.appendChild(renderMath(step, false));
+			});
+			finishRenderMath();
 		});
 	}
 }
