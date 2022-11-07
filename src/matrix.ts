@@ -60,7 +60,7 @@ export default class Matrix {
 	}
 
 	rref() {
-		let steps: string = "";
+		let steps: string = '';
 
 		for (
 			let pivot: { r: number; c: number } = { r: 0, c: 0 };
@@ -68,12 +68,9 @@ export default class Matrix {
 			pivot.r++, pivot.c++
 		) {
 			// Find next nonzero entry to swap into the pivot position
-			let row: number;
-			for (
-				row = pivot.r;
-				row >= this.array.length || this.array[row][pivot.c] == 0;
-				row++
-			) {
+			let row: number = pivot.r;
+			while (this.array[row][pivot.c] == 0) {
+				row++;
 				if (row >= this.array.length) {
 					row = pivot.r;
 					pivot.c++;
@@ -111,8 +108,6 @@ export default class Matrix {
 				}
 			}
 
-			// TODO: scale non-1s where there should be ones after you've finished main diagonal
-
 			steps += `$${this.toLatex()}$\n\n`;
 		}
 
@@ -120,14 +115,14 @@ export default class Matrix {
 	}
 
 	toString(): string {
-		return this.array.map((row) => row.join(" ")).join("\n");
+		return this.array.map((row) => row.join(' ')).join('\n');
 	}
 
 	toLatex(): string {
 		return (
-			"\\begin{bmatrix}" +
-			this.array.map((row) => row.join(" & ")).join(" \\\\ ") +
-			"\\end{bmatrix}"
+			'\\begin{bmatrix}' +
+			this.array.map((row) => row.join(' & ')).join(' \\\\ ') +
+			'\\end{bmatrix}'
 		);
 	}
 }
