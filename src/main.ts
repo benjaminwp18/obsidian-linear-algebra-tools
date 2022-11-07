@@ -1,21 +1,49 @@
-import { Plugin, renderMath, finishRenderMath } from 'obsidian';
+import { Plugin, renderMath, finishRenderMath, Editor, MarkdownView } from 'obsidian';
 import Matrix from './matrix';
 
-export default class MyPlugin extends Plugin {
+export default class LinearAlgebraTools extends Plugin {
 	async onload() {
-		this.registerMarkdownCodeBlockProcessor('rref', (source: string, el: HTMLElement, ctx: any) => {
-			let arr: number[][] = source.split('\n')
-				.map(row => row.split(' ').map(entry => Number(entry)));
+		this.addCommand({
+			id: 'rref',
+			name: 'RREF',
+			editorCallback: (editor: Editor, view: MarkdownView) => {
+				console.log(editor.getSelection());
 
-			let matrix: Matrix = new Matrix(arr);
-			let steps: string[] = matrix.rref();
+				let arr: number[][] = editor.getSelection().split('\n')
+					.map(row => row.split(' ').map(entry => Number(entry)));
 
-			el.innerHTML = '';
-			steps.forEach(step => {
-				if (step == 'br') el.appendChild(document.createElement('br'));
-				else el.appendChild(renderMath(step, false));
-			});
-			finishRenderMath();
+				let matrix: Matrix = new Matrix(arr);
+
+				let result: string = `\\textrm{rref}\\left(${matrix.toLatex()}\\right)=`;
+
+				matrix.rref();
+
+				result += matrix.toLatex();
+				editor.replaceSelection('$' + result + '$');
+			}
+		});
+
+		this.addCommand({
+			id: 'rref-steps',
+			name: 'RREF (Show steps)',
+			editorCallback: (editor: Editor, view: MarkdownView) => {
+				console.log(editor.getSelection());
+
+				let arr: number[][] = editor.getSelection().split('\n')
+					.map(row => row.split(' ').map(entry => Number(entry)));
+
+				let matrix: Matrix = new Matrix(arr);
+
+				let ogMatrix: string = matrix.toLatex();
+
+				let result: string = `$\\textrm{rref}\\left(${ogMatrix}\\right):$\n`;
+
+				result += matrix.rref();
+
+				result += `$\\textrm{rref}\\left(${ogMatrix}\\right) = ${matrix.toLatex()}$\n`;
+
+				editor.replaceSelection(result);
+			}
 		});
 	}
 }

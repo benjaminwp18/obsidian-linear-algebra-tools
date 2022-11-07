@@ -57,11 +57,7 @@ export default class Matrix {
     }
 
     rref() {
-        let steps: string[] = [];
-
-        steps.push(`\\textrm{rref}\\left(${this.toLatex()}\\right):`);
-        steps.push('br');
-        steps.push('br');
+        let steps: string = '';
 
         for (
             let pivot: { r: number, c: number } = { r: 0, c: 0 };
@@ -70,7 +66,7 @@ export default class Matrix {
         ) {
             // Find next nonzero entry to swap into the pivot position
             let row: number;
-            for (row = pivot.r; row >= this.array.length || this.array[row][pivot.c] == 0; row++) {
+            for (row = pivot.r; row >= this.array.length ||this.array[row][pivot.c] == 0; row++) {
                 if (row >= this.array.length) {
                     row = pivot.r;
                     pivot.c++;
@@ -84,33 +80,28 @@ export default class Matrix {
 
             // Swap nonzero entry to pivot position
             if (row != pivot.r) {
-                steps.push(`\\textrm{Swap\\:}R_{${row + 1}}\\textrm{\\:and\\:}R_{${pivot.r + 1}}`);
-                steps.push('br');
+                steps += `$\\textrm{Swap\\:}R_{${row + 1}}\\textrm{\\:and\\:}R_{${pivot.r + 1}}$\n`;
                 this.swapRows(row, pivot.r);
             }
 
             // Make the first nonzero entry of this row 1
             if (this.array[pivot.r][pivot.c] != 1) {
-                steps.push(`R_{${pivot.r + 1}}:=\\left(\\frac{1}{${this
-                    .array[pivot.r][pivot.c]}}\\right)R_{${pivot.r + 1}}`);
-                steps.push('br');
+                steps += `$R_{${pivot.r + 1}}:=\\left(\\frac{1}{${this
+                    .array[pivot.r][pivot.c]}}\\right)R_{${pivot.r + 1}}$\n`;
                 this.scaleRow(pivot.r, 1 / this.array[pivot.r][pivot.c]);
             }
 
             // Set other entries in this column to 0 with row addition
             for (row = 0; row < this.array.length; row++) {
                 if (row != pivot.r && this.array[row][pivot.c] != 0) {
-                    steps.push(`R_{${row + 1}}:=R_{${row + 1}}-(${this.array[row][pivot.c]})R_{${pivot.r + 1}}`);
-                    steps.push('br');
+                    steps += `$R_{${row + 1}}:=R_{${row + 1}}-(${this.array[row][pivot.c]})R_{${pivot.r + 1}}$\n`;
                     this.addRows(row, -1 * this.array[row][pivot.c], pivot.r);
                 }
             }
 
             // TODO: scale non-1s where there should be ones after you've finished main diagonal
 
-            steps.push(this.toLatex());
-            steps.push('br');
-            steps.push('br');
+            steps += `$${this.toLatex()}$\n\n`;
         }
 
         return steps;
