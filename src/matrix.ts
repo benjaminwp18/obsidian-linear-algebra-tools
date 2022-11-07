@@ -1,8 +1,12 @@
+import Logger from './logging';
+
 export default class Matrix {
 	array: number[][];
+	doLogging: boolean;
 
-	constructor(array: number[][]) {
+	constructor(array: number[][], doLogging: boolean = false) {
 		this.array = array;
+		this.doLogging = doLogging;
 	}
 
 	/**
@@ -11,8 +15,10 @@ export default class Matrix {
 	 * @param row2 a row to swap
 	 */
 	swapRows(row1: number, row2: number) {
-		console.debug(`Linear algebra tools: Swap ${row1} and ${row2}`);
-		console.debug(`Linear algebra tools:\n${this.toString()}`);
+		if (this.doLogging) {
+			Logger.debug(`Swap ${row1} and ${row2}`);
+			this.debugMatrix();
+		}
 
 		let tempRow: number[] = this.array[row1];
 
@@ -20,8 +26,10 @@ export default class Matrix {
 
 		this.array[row2] = tempRow;
 
-		console.debug(`Linear algebra tools:\n${this.toString()}`);
-		console.debug(`Linear algebra tools: End swap`);
+		if (this.doLogging) {
+			this.debugMatrix();
+			Logger.debug('End swap');
+		}
 	}
 
 	/**
@@ -31,15 +39,19 @@ export default class Matrix {
 	 * @param row2 the row to add to row1
 	 */
 	addRows(row1: number, coef: number, row2: number) {
-		console.debug(`Linear algebra tools: Add ${row1} + (${coef}) ${row2}`);
-		console.debug(`Linear algebra tools:\n${this.toString()}`);
+		if (this.doLogging) {
+			Logger.debug(`Add ${row1} + (${coef}) ${row2}`);
+			this.debugMatrix();
+		}
 
 		this.array[row2].forEach(
 			(row2Entry, col) => (this.array[row1][col] += coef * row2Entry)
 		);
 
-		console.debug(`Linear algebra tools:\n${this.toString()}`);
-		console.debug(`Linear algebra tools: End add`);
+		if (this.doLogging) {
+			this.debugMatrix();
+			Logger.debug('End add');
+		}
 	}
 
 	/**
@@ -48,15 +60,19 @@ export default class Matrix {
 	 * @param coef the coefficient to scale it by
 	 */
 	scaleRow(row: number, coef: number) {
-		console.debug(`Linear algebra tools: Scale ${row} by ${coef}`);
-		console.debug(`Linear algebra tools:\n${this.toString()}`);
+		if (this.doLogging) {
+			Logger.debug(`Scale ${row} by ${coef}`);
+			this.debugMatrix();
+		}
 
 		this.array[row].forEach(
 			(_entry, col) => (this.array[row][col] *= coef)
 		);
 
-		console.debug(`Linear algebra tools:\n${this.toString()}`);
-		console.debug(`Linear algebra tools: End scale`);
+		if (this.doLogging) {
+			this.debugMatrix();
+			Logger.debug('End scale');
+		}
 	}
 
 	rref() {
@@ -124,5 +140,9 @@ export default class Matrix {
 			this.array.map((row) => row.join(' & ')).join(' \\\\ ') +
 			'\\end{bmatrix}'
 		);
+	}
+
+	debugMatrix(): void {
+		Logger.debug('\n' + this.toString());
 	}
 }

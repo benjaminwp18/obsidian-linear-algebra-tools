@@ -1,11 +1,6 @@
-import {
-	Plugin,
-	renderMath,
-	finishRenderMath,
-	Editor,
-	MarkdownView,
-} from 'obsidian';
+import { Plugin, Editor, MarkdownView } from 'obsidian';
 import Matrix from './matrix';
+import Logger from './logging';
 
 export default class LinearAlgebraTools extends Plugin {
 	async onload() {
@@ -13,7 +8,7 @@ export default class LinearAlgebraTools extends Plugin {
 			id: 'rref',
 			name: 'RREF',
 			editorCallback: (editor: Editor, view: MarkdownView) => {
-				console.log(editor.getSelection());
+				Logger.debug('rref\n' + editor.getSelection());
 
 				let arr: number[][] = editor
 					.getSelection()
@@ -35,7 +30,7 @@ export default class LinearAlgebraTools extends Plugin {
 			id: 'rref-steps',
 			name: 'RREF (Show steps)',
 			editorCallback: (editor: Editor, view: MarkdownView) => {
-				console.log(editor.getSelection());
+				Logger.debug('rref-steps\n' + editor.getSelection());
 
 				let arr: number[][] = editor
 					.getSelection()
