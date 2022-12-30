@@ -24,5 +24,4 @@ tasks.
 
 ### Matrix Multiplication
 
--   \[ ] Implement basic algorithm
--   \[ ] Show LaTeX steps for each method
+-   \[x] Implement multiplication

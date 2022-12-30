@@ -52,5 +52,36 @@ export default class LinearAlgebraTools extends Plugin {
 				editor.replaceSelection(result);
 			},
 		});
+
+		this.addCommand({
+			id: 'multiply',
+			name: 'Multiply Matrices',
+			editorCallback: (editor: Editor, view: MarkdownView) => {
+				Logger.debug('mutiply\n' + editor.getSelection());
+
+				// Array containing both matrix arrays
+				let arrs: number[][][] = editor
+					.getSelection()
+					.split('\n\n')
+					.map((arrStr) =>
+						arrStr
+							.split('\n')
+							.map((row) =>
+								row.split(' ').map((entry) => Number(entry))
+							)
+					);
+
+				let matrix: Matrix = new Matrix(arrs[0]);
+
+				try {
+					matrix.multiply(new Matrix(arrs[1]));
+					editor.replaceSelection(`$${matrix.toLatex()}$`);
+				} catch (e: any) {
+					if (e.message) {
+						editor.replaceSelection(e.message);
+					}
+				}
+			},
+		});
 	}
 }
